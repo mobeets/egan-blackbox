@@ -24,7 +24,9 @@ def add_html_to_embed(handle, tweets):
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     """
     for tweet in tweets:
-        tweet['html'] = handle.get_oembed_tweet(id=tweet['id'])['html'] # ['url']
+        embed_info = handle.get_oembed_tweet(id=tweet['id'])
+        tweet['html'] = embed_info['html']
+        tweet['url'] = embed_info['url']
 
 def tweets_in(handle, start_id, end_id):    
     tweets = handle.get_user_timeline(screen_name=screen_name,
@@ -36,6 +38,16 @@ def tweets_in(handle, start_id, end_id):
     tweets.append(tweet)
     add_html_to_embed(handle, tweets)
     return tweets
+
+def print_as_html(infile, outfile):
+    tweets = json.load(open(infile))
+    out = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><html><head></head><body>'
+    for index, ts in tweets.iteritems():
+        out += '<h2>Chapter {0}</h2>\n'.format(index)
+        for tweet in ts:
+            out += '{0}\n'.format(tweet['html'].encode('utf-8'))
+    out += '</body></html>'
+    open(outfile, 'w').write(out)
 
 def save_to_json(tweets, outfile):
     json.dump(tweets, open(outfile, 'w'))
@@ -50,7 +62,7 @@ def get_out_while_you_still_can(tweets, outfile):
     outfile = fname + '_' + '-'.join(indices) + ext
     save_to_json(tweets, outfile)
 
-def main(outfile='tmp.json', min_index=4):
+def main(outfile='blackbox.json', min_index=7):
     handle = twitter_handle()
     tweets = {}
     no_errors = True
@@ -70,4 +82,5 @@ def main(outfile='tmp.json', min_index=4):
         print 'All tweets saved.'
 
 if __name__ == '__main__':
+    # print_as_html('blackbox_1-2-3.json', 'blackbox_1-2-3.html')
     main()
