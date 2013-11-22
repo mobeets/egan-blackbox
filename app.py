@@ -40,18 +40,22 @@ def tweets_in(handle, start_id, end_id):
     return tweets
 
 def print_as_html(infile, outfile):
+    fname, ext = os.path.splitext(outfile)
     tweets = json.load(open(infile))
-    out = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><html><head></head><body>'
-    out += "<h1>Jennifer Egan's <i>Black Box</i></h1>\n"
-    out += """<i>A short story serialized on twitter by <a href="https://twitter.com/nyerfiction">@NYerFiction</a> between May 24, 2012 - June 2, 2012.</i><br>\n"""
+    head = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><html><head></head><body>'
+    head += "<h1>Jennifer Egan's <i>Black Box</i></h1>\n"
+    head += """<i>A short story serialized on twitter by <a href="https://twitter.com/nyerfiction">@NYerFiction</a> between May 24, 2012 - June 2, 2012.</i><br>\n"""
+    tail = '<br></body></html>'
     indices = sorted(tweets, key=lambda key: int(key))
     for index in indices:
         ts = tweets[index]
-        out += '<h2>Chapter {0}</h2>\n'.format(index)
+        content = ''
+        content += '<h2>Chapter {0}</h2>\n'.format(index)
         for tweet in ts:
-            out += '{0}\n'.format(tweet['html'].encode('utf-8'))
-    out += '<br></body></html>'
-    open(outfile, 'w').write(out)
+            content += '{0}\n'.format(tweet['html'].encode('utf-8'))
+        out = head + content + tail
+        outfile = fname + '_' + index + ext
+        open(outfile, 'w').write(out)
 
 def print_as_txt(infile, outfile):
     tweets = json.load(open(infile))
@@ -105,4 +109,4 @@ def main(outfile='blackbox.json', min_index=None):
 if __name__ == '__main__':
     # main()
     print_as_html('blackbox.json', 'blackbox.html')
-    print_as_txt('blackbox.json', 'blackbox.txt')
+    # print_as_txt('blackbox.json', 'blackbox.txt')
