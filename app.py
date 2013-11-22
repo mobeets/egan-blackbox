@@ -51,7 +51,7 @@ def print_as_html(infile, outfile):
         ts = tweets[index]
         content = ''
         content += '<h2>Chapter {0}</h2>\n'.format(index)
-        for tweet in ts:
+        for tweet in reversed(ts):
             content += '{0}\n'.format(tweet['html'].encode('utf-8'))
         out = head + content + tail
         outfile = fname + '_' + index + ext
@@ -69,7 +69,7 @@ def print_as_txt(infile, outfile):
         out += '------------\n'
         out += 'Chapter {0}\n'.format(index)
         out += '------------\n'
-        for tweet in ts:
+        for tweet in reversed(ts):
             out += '{0}\n'.format(tweet['text'].encode('utf-8'))
         out += '\n'
     open(outfile, 'w').write(out)
@@ -109,4 +109,4 @@ def main(outfile='blackbox.json', min_index=None):
 if __name__ == '__main__':
     # main()
     print_as_html('blackbox.json', 'blackbox.html')
-    # print_as_txt('blackbox.json', 'blackbox.txt')
+    print_as_txt('blackbox.json', 'blackbox.txt')
