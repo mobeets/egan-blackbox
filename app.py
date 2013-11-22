@@ -4,9 +4,9 @@ from twython import Twython
 
 from story import screen_name, tweet_ranges
 
-# from dotenv import Dotenv
-# environ = Dotenv('.env')
-environ = os.environ
+from dotenv import Dotenv
+environ = Dotenv('.env')
+# environ = os.environ
 
 CONSUMER_KEY = environ['TWITTER_CONSUMER_KEY']
 CONSUMER_SECRET = environ['TWITTER_CONSUMER_SECRET']
@@ -42,6 +42,8 @@ def tweets_in(handle, start_id, end_id):
 def print_as_html(infile, outfile):
     tweets = json.load(open(infile))
     out = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><html><head></head><body>'
+    out += "<h1>Jennifer Egan's <i>Black Box</i></h1>\n"
+    out += """<i>A short story serialized on twitter by <a href="https://twitter.com/nyerfiction">@NYerFiction</a> between May 24, 2012 - June 2, 2012.</i><br>\n"""
     indices = sorted(tweets, key=lambda key: int(key))
     for index in indices:
         ts = tweets[index]
@@ -53,7 +55,10 @@ def print_as_html(infile, outfile):
 
 def print_as_txt(infile, outfile):
     tweets = json.load(open(infile))
-    out = ''
+    out = '-----------------------------\n'
+    out += "Jennifer Egan's Black Box\n"
+    out += '-----------------------------\n'
+    out += "A short story serialized on twitter by @NYerFiction between May 24, 2012 - June 2, 2012.\n\n"
     indices = sorted(tweets, key=lambda key: int(key))
     for index in indices:
         ts = tweets[index]
@@ -98,6 +103,6 @@ def main(outfile='blackbox.json', min_index=None):
         print 'All tweets saved.'
 
 if __name__ == '__main__':
-    main()
-    # print_as_html('blackbox.json', 'blackbox.html')
-    # print_as_txt('blackbox.json', 'blackbox.txt')
+    # main()
+    print_as_html('blackbox.json', 'blackbox.html')
+    print_as_txt('blackbox.json', 'blackbox.txt')
