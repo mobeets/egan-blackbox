@@ -4,9 +4,9 @@ from twython import Twython
 
 from story import screen_name, tweet_ranges
 
-from dotenv import Dotenv
-environ = Dotenv('.env')
-# environ = os.environ
+# from dotenv import Dotenv
+# environ = Dotenv('.env')
+environ = os.environ
 
 CONSUMER_KEY = environ['TWITTER_CONSUMER_KEY']
 CONSUMER_SECRET = environ['TWITTER_CONSUMER_SECRET']
@@ -42,11 +42,27 @@ def tweets_in(handle, start_id, end_id):
 def print_as_html(infile, outfile):
     tweets = json.load(open(infile))
     out = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><html><head></head><body>'
-    for index, ts in tweets.iteritems():
+    indices = sorted(tweets, key=lambda key: int(key))
+    for index in indices:
+        ts = tweets[index]
         out += '<h2>Chapter {0}</h2>\n'.format(index)
         for tweet in ts:
             out += '{0}\n'.format(tweet['html'].encode('utf-8'))
-    out += '</body></html>'
+    out += '<br></body></html>'
+    open(outfile, 'w').write(out)
+
+def print_as_txt(infile, outfile):
+    tweets = json.load(open(infile))
+    out = ''
+    indices = sorted(tweets, key=lambda key: int(key))
+    for index in indices:
+        ts = tweets[index]
+        out += '------------\n'
+        out += 'Chapter {0}\n'.format(index)
+        out += '------------\n'
+        for tweet in ts:
+            out += '{0}\n'.format(tweet['text'].encode('utf-8'))
+        out += '\n'
     open(outfile, 'w').write(out)
 
 def save_to_json(tweets, outfile):
@@ -62,7 +78,7 @@ def get_out_while_you_still_can(tweets, outfile):
     outfile = fname + '_' + '-'.join(indices) + ext
     save_to_json(tweets, outfile)
 
-def main(outfile='blackbox.json', min_index=7):
+def main(outfile='blackbox.json', min_index=None):
     handle = twitter_handle()
     tweets = {}
     no_errors = True
@@ -82,5 +98,6 @@ def main(outfile='blackbox.json', min_index=7):
         print 'All tweets saved.'
 
 if __name__ == '__main__':
-    # print_as_html('blackbox_1-2-3.json', 'blackbox_1-2-3.html')
     main()
+    # print_as_html('blackbox.json', 'blackbox.html')
+    # print_as_txt('blackbox.json', 'blackbox.txt')
