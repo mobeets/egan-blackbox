@@ -107,6 +107,6 @@ def main(outfile='blackbox.json', min_index=None):
         print 'All tweets saved.'
 
 if __name__ == '__main__':
-    # main()
-    print_as_html('blackbox.json', 'blackbox.html')
-    print_as_txt('blackbox.json', 'blackbox.txt')
+    main()
+    # print_as_html('blackbox.json', 'blackbox.html')
+    # print_as_txt('blackbox.json', 'blackbox.txt')
