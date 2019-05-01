@@ -81,9 +81,9 @@ def get_out_while_you_still_can(tweets, outfile):
     fname, ext = os.path.splitext(outfile)
     indices = [str(i) for i in sorted(tweets.keys())]
     if not indices:
-        print 'No tweets saved.'
+        print('No tweets saved.')
         return
-    print 'Saving tweets from indices {0}'.format(', '.join(indices))
+    print('Saving tweets from indices {0}'.format(', '.join(indices)))
     outfile = fname + '_' + '-'.join(indices) + ext
     save_to_json(tweets, outfile)
 
@@ -95,7 +95,7 @@ def main(outfile='blackbox.json', min_index=None):
         if min_index and row['index'] < min_index:
             continue
         assert row['index'] not in tweets
-        print 'Fetching tweets in index {0}...'.format(row['index'])
+        print('Fetching tweets in index {0}...'.format(row['index']))
         try:
             tweets[row['index']] = tweets_in(handle, row['tweet_start_id'], row['tweet_end_id'])
         except:
@@ -104,7 +104,7 @@ def main(outfile='blackbox.json', min_index=None):
             break
     if no_errors:
         save_to_json(tweets, outfile)
-        print 'All tweets saved.'
+        print('All tweets saved.')
 
 if __name__ == '__main__':
     main()
